@@ -132,6 +132,92 @@ namespace iZettle
     // typedef void(^IZSDKPayPalQRCCompletion)(IZSDKPayPalQRCPaymentInfo * _Nullable paymentInfo, NSError * _Nullable error);
     delegate void IZSDKPayPalQRCCompletion([NullAllowed] IZSDKPayPalQRCPaymentInfo arg0, [NullAllowed] NSError arg1);
 
+    // typedef void(^IZSDKManualCardEntryCompletion)(IZSDKManualCardEntryPaymentInfo * _Nullable paymentInfo, NSError * _Nullable error);
+    delegate void IZSDKManualCardEntryCompletion([NullAllowed] IZSDKManualCardEntryPaymentInfo arg0, [NullAllowed] NSError arg1);
+
+    // @interface IZSDKSettingsConfiguration: NSObject
+    [BaseType(typeof(NSObject))]
+    interface IZSDKSettingsConfiguration
+    {
+        // @property (nonatomic, readonly) BOOL paypalReaderTippingSettingsEnabled;
+        [Export("paypalReaderTippingSettingsEnabled")]
+        bool PaypalReaderTippingSettingsEnabled { get; }
+
+        // - (instancetype)initWithPayPalReaderTippingSettingsEnabled:(BOOL)paypalReaderTippingSettingsEnabled
+        [Export("initWithPayPalReaderTippingSettingsEnabled:")]
+        IntPtr Constructor(bool paypalReaderTippingSettingsEnabled);
+    }
+
+    // @interface IZSDKPredefinedTippingValues: NSObject
+    [BaseType(typeof(NSObject))]
+    interface IZSDKPredefinedTippingValues
+    {
+        // @property (nonatomic, readonly) NSUInteger option1;
+        [Export("option1")]
+        nuint Option1 { get; }
+
+        // @property (nonatomic, readonly) NSUInteger option2;
+        [Export("option2")]
+        nuint Option2 { get; }
+
+        // @property (nonatomic, readonly) NSUInteger option3;
+        [Export("option3")]
+        nuint Option3 { get; }
+
+        // - (instancetype)initWithOption1:(NSUInteger)option1 option2:(NSUInteger)option2 option3:(NSUInteger)option3;
+        [Export("initWithOption1:option2:option3:")]
+        IntPtr Constructor(nuint option1, nuint option2, nuint option3);
+    }
+
+    // @interface IZSDKTippingConfiguration: NSObject
+    [BaseType(typeof(NSObject))]
+    interface IZSDKTippingConfiguration
+    {
+        // @property (nonatomic, readonly) IZZettleReaderTippingStyle zettleReaderTippingStyle;
+        [Export("zettleReaderTippingStyle")]
+        IZZettleReaderTippingStyle ZettleReaderTippingStyle { get; }
+
+        // @property (nonatomic, readonly) IZPayPalReaderTippingStyle paypalReaderTippingStyle;
+        [Export("paypalReaderTippingStyle")]
+        IZPayPalReaderTippingStyle PaypalReaderTippingStyle { get; }
+
+        // @property (nonatomic, readonly, strong, nullable) IZSDKPredefinedTippingValues *paypalReaderPredefinedTippingValues;
+        [NullAllowed, Export("paypalReaderPredefinedTippingValues")]
+        IZSDKPredefinedTippingValues PaypalReaderPredefinedTippingValues { get; }
+
+        // - (instancetype)initWithZettleReaderTippingStyle:(IZZettleReaderTippingStyle)zettleReaderTippingStyle
+        [Export("initWithZettleReaderTippingStyle:")]
+        IntPtr Constructor(IZZettleReaderTippingStyle zettleReaderTippingStyle);
+
+        // - (instancetype)initWithPayPalReaderTippingStyle:(IZPayPalReaderTippingStyle)paypalReaderTippingStyle
+        [Export("initWithPayPalReaderTippingStyle:")]
+        IntPtr Constructor(IZPayPalReaderTippingStyle paypalReaderTippingStyle);
+
+        // - (instancetype)initWithPayPalReaderTippingStyle:(IZPayPalReaderTippingStyle)paypalReaderTippingStyle
+        //              paypalReaderPredefinedTippingValues:(IZSDKPredefinedTippingValues *)paypalReaderPredefinedTippingValues
+        [Export("initWithPayPalReaderTippingStyle:paypalReaderPredefinedTippingValues:")]
+        IntPtr Constructor(IZPayPalReaderTippingStyle paypalReaderTippingStyle, IZSDKPredefinedTippingValues paypalReaderPredefinedTippingValues);
+
+        // - (instancetype)initWithZettleReaderTippingStyle:(IZZettleReaderTippingStyle)zettleReaderTippingStyle
+        //                        paypalReaderTippingStyle:(IZPayPalReaderTippingStyle)paypalReaderTippingStyle
+        [Export("initWithZettleReaderTippingStyle:paypalReaderTippingStyle:")]
+        IntPtr Constructor(IZZettleReaderTippingStyle zettleReaderTippingStyle, IZPayPalReaderTippingStyle paypalReaderTippingStyle);
+
+        // - (instancetype)initWithZettleReaderTippingStyle:(IZZettleReaderTippingStyle)zettleReaderTippingStyle
+        //                        paypalReaderTippingStyle:(IZPayPalReaderTippingStyle)paypalReaderTippingStyle
+        //              paypalReaderPredefinedTippingValues:(IZSDKPredefinedTippingValues *)paypalReaderPredefinedTippingValues
+        [Export("initWithZettleReaderTippingStyle:paypalReaderTippingStyle:paypalReaderPredefinedTippingValues:")]
+        IntPtr Constructor(IZZettleReaderTippingStyle zettleReaderTippingStyle, IZPayPalReaderTippingStyle paypalReaderTippingStyle, IZSDKPredefinedTippingValues paypalReaderPredefinedTippingValues);
+
+        // + (instancetype)sdkConfiguredTippingConfiguration;
+        [Static, Export("sdkConfiguredTippingConfiguration")]
+        IZSDKTippingConfiguration SdkConfiguredTippingConfiguration { get; }
+
+        // + (instancetype)disabledTippingConfiguration;
+        [Static, Export("disabledTippingConfiguration")]
+        IZSDKTippingConfiguration DisabledTippingConfiguration { get; }
+    }
+
     // @interface iZettleSDK : NSObject
     [BaseType(typeof(NSObject)), DisableDefaultCtor]
     interface iZettleSDK
@@ -139,6 +225,10 @@ namespace iZettle
         // @property (readonly, nonatomic) NSString * _Nonnull version;
         [Export("version")]
         string Version { get; }
+
+        // @property (nonatomic, readonly) BOOL isLoggedIn;
+        [Export("isLoggedIn")]
+        bool IsLoggedIn { get; }
 
         // +(iZettleSDK * _Nonnull)shared;
         [Static]
@@ -170,6 +260,14 @@ namespace iZettle
         [Export("startWithAuthorizationProvider:enableDeveloperMode:")]
         void StartWithAuthorizationProvider(IiZettleSDKAuthorizationProvider provider, bool enableDeveloperMode);
 
+        // - (void)setCardPaymentPayPalPartnerAttributionId:(nullable NSString *)partnerAttributionId;
+        [Export("setCardPaymentPayPalPartnerAttributionId:")]
+        void SetCardPaymentPayPalPartnerAttributionId([NullAllowed] string partnerAttributionId);
+
+        // - (nullable NSString *)cardPaymentPayPalPartnerAttributionId;
+        [NullAllowed, Export("cardPaymentPayPalPartnerAttributionId")]
+        string CardPaymentPayPalPartnerAttributionId { get; }
+
         //- (BOOL) applicationDidOpenWithURL:(NSURL*) url NS_DEPRECATED_IOS(9_0, 11_0, "Not needed on newer iOS versions.")
         [Export("applicationDidOpenWithURL:")]
         // [Deprecated(PlatformName.iOS, 12, 0, PlatformArchitecture.All, "Not needed on newer iOS versions.")]
@@ -185,6 +283,18 @@ namespace iZettle
         [Export("logout")]
         void Logout();
 
+        // - (void)performLoginWithCompletion:(void (^)(NSError * _Nullable))completion;
+        [Export("performLoginWithCompletion:")]
+        void PerformLoginWithCompletion(Action<NSError> completion);
+
+        // - (void)performLoginFromViewController:(UIViewController *)viewController completion:(void (^)(NSError * _Nullable))completion;
+        [Export("performLoginFromViewController:completion:")]
+        void PerformLoginFromViewController(UIViewController viewController, Action<NSError> completion);
+
+        // - (void)abortOperation;
+        [Export("abortOperation")]
+        void AbortOperation();
+
         // -(void)chargeAmount:(NSDecimalNumber * _Nonnull)amount enableTipping:(BOOL)enableTipping reference:(NSString * _Nullable)reference presentFromViewController:(UIViewController * _Nonnull)viewController completion:(iZettleSDKOperationCompletion _Nonnull)completion;
         [Export("chargeAmount:enableTipping:reference:presentFromViewController:completion:")]
         void ChargeAmount(NSDecimalNumber amount, bool enableTipping, [NullAllowed] string reference, UIViewController viewController, iZettleSDKOperationCompletion completion);
@@ -197,6 +307,23 @@ namespace iZettle
         // NS_SWIFT_NAME(charge(amount:tippingStyle:reference:presentFrom:completion:));
         [Export("chargeAmount:tippingStyle:reference:presentFromViewController:completion:")]
         void ChargeAmount(NSDecimalNumber amount, IZSDKTippingStyle tippingStyle, [NullAllowed] string reference, UIViewController viewController, iZettleSDKOperationCompletion completion);
+
+        // - (void)chargeAmount:(NSDecimalNumber *)amount
+        // tippingConfiguration:(IZSDKTippingConfiguration *)tippingConfiguration
+        //            reference:(nullable NSString *)reference
+        // presentFromViewController:(UIViewController *)viewController
+        //           completion:(iZettleSDKOperationCompletion)completion
+        [Export("chargeAmount:tippingConfiguration:reference:presentFromViewController:completion:")]
+        void ChargeAmount(NSDecimalNumber amount, IZSDKTippingConfiguration tippingConfiguration, [NullAllowed] string reference, UIViewController viewController, iZettleSDKOperationCompletion completion);
+
+        // - (void)chargeAmount:(NSDecimalNumber *)amount
+        // tippingConfiguration:(IZSDKTippingConfiguration *)tippingConfiguration
+        //            reference:(nullable NSString *)reference
+        // payPalPartnerPayeePricingTierId:(nullable NSString *)pricingTierId
+        // presentFromViewController:(UIViewController *)viewController
+        //           completion:(iZettleSDKOperationCompletion)completion
+        [Export("chargeAmount:tippingConfiguration:reference:payPalPartnerPayeePricingTierId:presentFromViewController:completion:")]
+        void ChargeAmount(NSDecimalNumber amount, IZSDKTippingConfiguration tippingConfiguration, [NullAllowed] string reference, [NullAllowed] string pricingTierId, UIViewController viewController, iZettleSDKOperationCompletion completion);
 
         // -(void)refundAmount:(NSDecimalNumber * _Nullable)amount ofPaymentWithReference:(NSString * _Nonnull)reference refundReference:(NSString * _Nullable)refundReference presentFromViewController:(UIViewController * _Nonnull)viewController completion:(iZettleSDKOperationCompletion _Nonnull)completion;
         [Export("refundAmount:ofPaymentWithReference:refundReference:presentFromViewController:completion:")]
@@ -259,9 +386,10 @@ namespace iZettle
         [Export("presentSettingsFromViewController:")]
         void PresentSettingsFromViewController(UIViewController viewController);
 
-        // -(void)abortOperation;
-        [Export("abortOperation")]
-        void AbortOperation();
+        // - (void)presentSettingsFromViewController:(UIViewController *)viewController
+        //                            configuration:(IZSDKSettingsConfiguration *)configuration
+        [Export("presentSettingsFromViewController:configuration:")]
+        void PresentSettingsFromViewController(UIViewController viewController, IZSDKSettingsConfiguration configuration);
     }
 
     // @interface iZettleSDKPaymentInfo : NSObject
@@ -376,5 +504,59 @@ namespace iZettle
         string TransactionId { get; }
 
         // @end
+    }
+
+    // @interface IZSDKManualCardEntryPaymentInfo: NSObject
+    [BaseType(typeof(NSObject))]
+    interface IZSDKManualCardEntryPaymentInfo
+    {
+        // /// Total transaction amount.
+        // @property (nonatomic, readonly) NSDecimalNumber *amount;
+        [Export("amount")]
+        NSDecimalNumber Amount { get; }
+
+        // /// Zettle's reference to the payment that should be displayed on receipts (not to be confused with the reference provided by you during a charge or refund operation).
+        // @property (nonatomic, readonly) NSString *referenceNumber;
+        [Export("referenceNumber")]
+        string ReferenceNumber { get; }
+
+        // /// The Zettle transaction identifier for the transaction itself.
+        // @property (nonatomic, readonly) NSString *transactionId;
+        [Export("transactionId")]
+        string TransactionId { get; }
+
+        // @end
+    }
+
+    // @interface iZettleSDK(ManualCardEntry)
+    [Category]
+    [BaseType(typeof(iZettleSDK))]
+    interface iZettleSDK_ManualCardEntry
+    {
+        // - (void)chargeManualCardEntryWithAmount:(NSDecimalNumber *)amount
+        //                                reference:(NSUUID *)reference
+        //                presentFromViewController:(UIViewController *)viewController
+        //                               completion:(IZSDKManualCardEntryCompletion)completion
+        [Export("chargeManualCardEntryWithAmount:reference:presentFromViewController:completion:")]
+        void ChargeManualCardEntryWithAmount(NSDecimalNumber amount, NSUuid reference, UIViewController viewController, IZSDKManualCardEntryCompletion completion);
+
+        // - (void)retrieveManualCardEntryInfoForReference:(NSUUID *)reference
+        //                        presentFromViewController:(UIViewController *)viewController
+        //                                       completion:(IZSDKManualCardEntryCompletion)completion
+        [Export("retrieveManualCardEntryInfoForReference:presentFromViewController:completion:")]
+        void RetrieveManualCardEntryInfoForReference(NSUuid reference, UIViewController viewController, IZSDKManualCardEntryCompletion completion);
+
+        // - (void)retrieveManualCardEntryInfoForReference:(NSUUID *)reference
+        //                                     completion:(IZSDKManualCardEntryCompletion)completion
+        [Export("retrieveManualCardEntryInfoForReference:completion:")]
+        void RetrieveManualCardEntryInfoForReference(NSUuid reference, IZSDKManualCardEntryCompletion completion);
+
+        // - (void)refundManualCardEntryAmount:(nullable NSDecimalNumber *)amount
+        //              ofPaymentWithReference:(NSUUID *)paymentReference
+        //                     refundReference:(NSUUID *)refundReference
+        //           presentFromViewController:(UIViewController *)viewController
+        //                          completion:(IZSDKManualCardEntryCompletion)completion
+        [Export("refundManualCardEntryAmount:ofPaymentWithReference:refundReference:presentFromViewController:completion:")]
+        void RefundManualCardEntryAmount([NullAllowed] NSDecimalNumber amount, NSUuid paymentReference, NSUuid refundReference, UIViewController viewController, IZSDKManualCardEntryCompletion completion);
     }
 }
